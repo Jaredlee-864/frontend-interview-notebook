@@ -100,3 +100,91 @@
 - 加载顺序：父beforeCreate -> 父created -> 父beforeMount -> 子beforeCreate -> 子created -> 子beforeMount -> 子mounted -> 父mounted
 - 更新顺序：父beforeUpdate->子beforeUpdate->子updated->父updated
 - 销毁顺序：父beforeDestroy->子beforeDestroy->子destroyed->父destroyed
+
+
+
+### nextTick
+
+Vue 更新 DOM 是异步执行的，批量的
+
+nextTick 就是在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，可以获取更新后的 DOM
+
+nextTick 异步实现方式，首先选用microTask, 如果浏览器不支持，则会选用macroTask
+- microTask
+  - Promise
+  - MutationObserver
+- macroTask
+  - setImmediate
+  - setTimeout
+
+### Vue源码 - Vue 首次渲染流程
+
+流程如下：
+
+- Vue初始化实例成员，静态成员，调用`new Vue()`构造函数，生成新的 Vue 实例
+- `new Vue()`的构造函数中会调用`this._init()`方法
+- `this._init()`方法中，会调用`vm.$mount()`方法。
+- `vm.$mount()`有两处，一个是`src\platforms\web\entry-runtime-with-compiler.js`文件中的。该方法会判断是否有 render 函数传入，如果没有，通过 `compileToFunction()` 方法根据 template 生成 render 函数。render函数确认后，`options.render = render`
+- 另一个是`src\platforms\web\runtimes\index.js`文件中的`vm.$mount()`，这是 $mount 方法的核心功能，之前的 $mount 方法只是将 template 转换成 render 函数，方便开发。
+  - 该方法会首先判断是否有 render 选项，如果没有但是传入了 template，并且当前是开发环境的话，会发出警告说明不支持将 template 转换成render函数，请使用 runtime-with-compiler.js 版本。
+  - 触发 `beforeMount()` 生命周期钩子函数
+  - 定义 `updateComponent()` 方法
+    - 定义`vm._update(vm._render(),...)`
+    - `vm._render()` 功能：根据 render 函数，渲染生成虚拟DOM(vNode)
+    - `vm._update()` 功能：根据 vNode，转换成真实 DOM，并挂载
+  - 创建 Watcher 实例
+    - 将 `updateComponent()` 传递进去
+    - 调用 `get()` 方法
+      - 创建完 watcher 实例后，会调用一次 get 方法
+      - 调用 `updateComponent()` 方法
+      - 调用 `vm._render()` 创建 vNode
+      - 调用 `vm._update(vNode)` 生成真实DOM，并挂载
+
+流程图
+
+<img src="./images/Vue首次渲染过程.png">
+
+### Vue 源码 - 响应式原理
+
+流程如下：
+- 调用 initState() --> initData() --> observe(value)
+- observe(value)
+  - 判断 value 是不是对象，不是对象，直接 return
+  - 判断 value 有没有 `__ob__` 属性，有的话说明该对象已经是响应式对象，直接 return
+  - 没有的话，new Observer(value), 创建 observer 对象
+- Observer 类
+  - 给对象添加一个不可枚举的 `__ob__`属性，用来记录当前的 observer 对象
+  - **数组的响应化处理**
+  - **对象的响应化处理，调用 walk 方法**
+    - walk 方法就是遍历传入的对象的每一个属性，并调用 defineReactive() 方法
+- defineReactive 方法
+  - 为每一个属性创建 dep 对象
+  - 如果当前的属性值为对象，调用 observe() 方法
+  - 调用 defineProperty 方法，定义 getter 和 setter
+  - 定义 getter
+    - **收集依赖**
+    - 返回属性的值
+  - 定义 setter
+    - 保存新值
+    - 如果新值是对象，调用 observe() 方法
+    - **派发更新（发送通知），调用 dep.notify()**
+- 收集依赖
+  - 在 watcher 对象的 get 方法中调用 pushTarget 方法，将当前 watcher 记为录 dep.target 
+  - 访问 data 中的成员的时候收集依赖。即在defineReactive 的 getter 中收集依赖
+  - 把属性对应的 watcher 添加到 dep 的 subs 数组中
+  - 给 childOb 收集依赖，目的是子对象添加和删除成员时，发送通知
+- watcher 
+  - dep.notify() 调用 watcher 对象的 update() 方法
+  - queueWatcher() 判断 watcher 是否被处理，如果没有被处理，添加到队列 queue 中，并调用 flushSchedulerQueue()
+  - flushSchedulerQueue()
+    - 触发 beforeUpdate() 钩子函数
+    - 调用 watcher.run()
+      - 对于渲染 watcher来说，流程为: run() --> get() --> getter() --> updateComponent()
+    - 清空上一次的依赖
+    - 触发 activated 钩子
+    - 触发 updated 钩子
+
+
+流程图：
+
+<img src="./images/响应式处理过程.png" >
