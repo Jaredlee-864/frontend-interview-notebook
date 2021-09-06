@@ -188,3 +188,37 @@ nextTick 异步实现方式，首先选用microTask, 如果浏览器不支持，
 流程图：
 
 <img src="./images/响应式处理过程.png" >
+
+
+### Vue源码 - 虚拟DOM
+
+流程如下：
+
+<!-- TODO: -->
+
+流程图：
+
+<img src="./images/虚拟%20DOM%20updateComponent.png" >
+
+### Proxy 相比于 defineProperty 的优势
+
+- 数组变化也能监听到
+- 不需要深度遍历监听
+
+### vue - router
+
+- mode
+  - hash
+  - history
+- 跳转
+  - `this.$router.push()`
+  - `<router-link to = ""></router-link>`
+- 占位
+  - `<router-view></router-view>`
+
+### Vuex
+- `state`: 状态中心
+- `mutations`: 更改状态，使用 `commit` 触发一个 `mutation`
+- `actions`: 异步更新状态，使用 `dispatch` 触发一个 `action`
+- `getters`: 获取状态的处理过后的值
+- `modules`: 将`state`分成多个`modules`, 便于管理
