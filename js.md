@@ -522,4 +522,5 @@ for(let i of obj){
 - `reduce / reduceRight(fn(prev, cur), defaultPrev)`: 累加，prev 为上次执行的函数的 return 值，cur 为当前值
   - 当传入 defaultPrev 是，从第一项开始
   - 当未传入时，defaultPrev 默认为数组的第一项，从第二项开始
--  
+
+## 22. Web Workers
