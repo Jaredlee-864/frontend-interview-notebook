@@ -69,7 +69,7 @@
 
 ## 6.去除浮动影响，防止父级高度塌陷
 
-- 通过增加尾元素清除浮动
+- 通过增加伪元素清除浮动
   - `:after / <br> : clear: both`
 - 创建父级 BFC
   - `overflow: hidden`
@@ -77,7 +77,7 @@
 
 ## 7. link 于 @import 的区别
 
-- 本质上的区别：link 是 html 标签，具有很多属性，可以定义 Rel等作用。而@import只能用于加载css
+- 本质上的区别：link 是 html 标签，具有很多属性，可以定义 Rel 等作用。而@import只能用于加载css
 - 加载顺序的区别：解析到 link 是，页面会同步加载所引入的css，而@import所引用的css会等到页面加载完才被加载
 - 兼容性方面的区别：@import需要IE5以上才能使用，而link因为是html标签，所以没有兼容性的问题
 - 动态引入方面的区别：link 可以使用js动态引入，@import 不行

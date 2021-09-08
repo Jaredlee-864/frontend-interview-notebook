@@ -2,7 +2,7 @@
   - 原型（prototype）：一个简单的对象，**用于实现对象的属性继承**。简单来说，可以理解为对象的爹。在 Firefox 和 Chrome 中，每个`Javascript` 对象中都包含一个 `__proto__` 属性指向它爹（该对象的原型），可通过 `obj.__proto__` 来访问
   - 构造函数(constructor): 可以通过 `new` 关键字来**新建一个对象**的函数
   - 实例：通过构造函数和 `new` 关键字创建出来的对象，叫实例。**实例通过 `__proto__` 指向原型，通过 `constructor` 指向构造函数**
-  - 总结为一句话就是 `obj.__proto__ = obj.contructor.prototype`。即实例的 `__proto__` 属性，指向其构造函数的 `prototype` 属性，两者是相等的，都为原型
+  - 总结为一句话就是 `obj.__proto__ = obj.constructor.prototype`。即实例的 `__proto__` 属性，指向其构造函数的 `prototype` 属性，两者是相等的，都为原型
 
 ## 2. 原型链
 > 原型链是由原型对象构成的。每个实例对象都有 **__proto__** 属性，指向了创建该对象的构造函数的原型，**__proto__** 将对象连接起来组成了原型链。是一个用来 **实现继承和共享属性** 的有限的对象链。
@@ -74,7 +74,7 @@
 
 - html 静态`<script>`标签引入
 - js 动态插入`<script>`
-- `<script defer>`: 延迟加载，元素解析完成后执行
+- `<script defer>`: 延迟加载，元素(document)解析完成后执行
 - `<script async>`: 异步加载，但执行时会阻塞元素渲染
 
 ## 6. Set/weakSet/Map/weakMap
@@ -193,7 +193,7 @@ JS在使用运算符号或者对比符是，会发生隐式类型转换，规则
 
 - `require / import` 的区别
   - `require` 是 **同步** 导入，`import` 属于 **异步** 导入
-  - `require` 是 **值拷贝**，导出值变化不会影响导入值；`import`指向内存地址，导入值会随导出值而变化
+  - `require` 是 **值拷贝**，导出值变化不会影响导入值；`import` 指向内存地址，导入值会随导出值而变化
 
 ## 16. 防抖与节流
 
