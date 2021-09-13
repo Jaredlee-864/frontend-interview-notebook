@@ -252,3 +252,151 @@ function createElm(vnode){
   return dom;
 }
 ```
+
+### 手写-实现一个对象的 flatten 方法（阿里）
+
+题目描述
+
+```js
+const obj = {
+ a: {
+        b: 1,
+        c: 2,
+        d: {e: 5}
+    },
+ b: [1, 3, {a: 2, b: 3}],
+ c: 3
+}
+
+flatten(obj) 结果返回如下
+// {
+//  'a.b': 1,
+//  'a.c': 2,
+//  'a.d.e': 5,
+//  'b[0]': 1,
+//  'b[1]': 3,
+//  'b[2].a': 2,
+//  'b[2].b': 3
+//   c: 3
+// }
+
+```
+实现如下：
+```js
+function flatten(obj) {
+  function isObj(val) {
+    return typeof val === "object" && val !== null;
+  }
+  if (!isObj(obj)) return;
+  let res = {};
+  function flat(cur, delimiter = "") {
+    if (Array.isArray(cur)) {
+      cur.forEach((val, index) => {
+        flat(val, `${delimiter}[${index}]`);
+      });
+    } else if (isObj(cur)) {
+      for (let i in cur) {
+        flat(cur[i], `${delimiter}${delimiter ? "." : ""}${i}`);
+      }
+    } else {
+      res[delimiter] = cur;
+    }
+  }
+  flat(obj);
+  return res;
+}
+
+```
+
+### 手写-判断括号字符串是否有效（小米）
+
+题目描述：
+
+```js
+
+给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。
+
+有效字符串需满足：
+
+    左括号必须用相同类型的右括号闭合。
+    左括号必须以正确的顺序闭合。
+
+示例 1：
+
+输入：s = "()"
+输出：true
+
+示例 2：
+
+输入：s = "()[]{}"
+输出：true
+
+示例 3：
+
+输入：s = "(]"
+输出：false
+
+```
+
+代码实现：
+
+```js
+function isPairBrackets(str) {
+  const pairObj = {
+    "(": ")",
+    "[": "]",
+    "{": "}",
+  };
+  let stack = [];
+  for (let i = 0; i < str.length; i++) {
+    let cur = str[i];
+    if (cur === "(" || cur === "[" || cur === "{") {
+      stack.push(cur);
+    } else if (cur === ")" || cur === "]" || cur === "}") {
+      const key = stack.pop();
+      if (cur !== pairObj[key]) return false;
+    }
+  }
+  if (stack.length) return false;
+  return true;
+}
+```
+
+### 手写-查找数组公共前缀（美团）
+
+题目描述：
+
+```js
+编写一个函数来查找字符串数组中的最长公共前缀。
+如果不存在公共前缀，返回空字符串 ""。
+
+示例 1：
+
+输入：strs = ["flower","flow","flight"]
+输出："fl"
+
+示例 2：
+
+输入：strs = ["dog","racecar","car"]
+输出：""
+解释：输入不存在公共前缀。
+```
+代码实现：
+
+```js
+function maxPrefix(strs) {
+  const str = strs[0];
+  let index = 0,
+    res = "";
+  while (index < str.length) {
+    for (let i = 0; i < strs.length; i++) {
+      if (!strs[i][index] || strs[i][index] !== str[index]) {
+        return res;
+      }
+    }
+    res += str[index];
+    index++;
+  }
+  return res;
+}
+```
