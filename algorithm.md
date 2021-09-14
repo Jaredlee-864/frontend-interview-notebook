@@ -400,3 +400,144 @@ function maxPrefix(strs) {
   return res;
 }
 ```
+
+### 手写-查找数组公共前缀（美团）
+
+题目描述：
+
+```js
+
+给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。
+
+
+示例 1:
+
+输入: s = "abcabcbb"
+输出: 3
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+
+示例 2:
+
+输入: s = "bbbbb"
+输出: 1
+解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+
+示例 3:
+
+输入: s = "pwwkew"
+输出: 3
+解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+     请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+
+示例 4:
+
+输入: s = ""
+输出: 0
+
+```
+
+代码实现：
+
+```js
+const lengthOfLongestSubstring = function (s) {
+      if (s.length === 0) return 0;
+      let left = 0,
+        right = 1,
+        max = 0;
+      while (right <= s.length) {
+        let lr = s.slice(left, right);
+        const index = lr.indexOf(s[right]);
+        if (index > -1) {
+          left = index + left + 1;
+        } else {
+          lr = s.slice(left, right + 1);
+          max = Math.max(max, lr.length);
+        }
+        right++;
+      }
+      return max;
+    };
+```
+
+### 手写-如何找到数组中第一个没出现的最小正整数 怎么优化（字节）
+
+题目描述：
+
+```js
+
+给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。
+
+示例 1：
+
+输入：nums = [1,2,0]
+输出：3
+
+示例 2：
+
+输入：nums = [3,4,-1,1]
+输出：2
+
+示例 3：
+
+输入：nums = [7,8,9,11,12]
+输出：1
+
+```
+
+代码实现：
+
+```js
+
+// 暴力穷举法 O(n^2) 的方法
+function firstMissingPositive(nums) {
+  let i = 0,
+    res = 1;
+  while (i <= nums.length) {
+    if (nums[i] === res) {
+      res++;
+      i = 0;
+    } else {
+      i++;
+    }
+  }
+  return res;
+}
+
+// 数据集合法 时间空间均为 O(n)
+function firstMissingPositive(nums) {
+  let set = new Set();
+  res = 1;
+  for (let i = 0; i <= nums.length; i++) {
+    set.add(nums[i]);
+  }
+  for (; res < set.size + 1; res++) {
+    if (!set.has(res)) {
+      return res;
+    }
+  }
+}
+
+// 替换法 最终版 时间复杂度为 O(n) 并且只使用常数级别空间 TODO:
+function firstMissingPositive(nums) {
+    for (let i = 0; i < nums.length; i++) {
+      while (
+        nums[i] >= 1 &&
+        nums[i] <= nums.length && // 对1~nums.length范围内的元素进行安排
+        nums[nums[i] - 1] !== nums[i] // 已经出现在理想位置的，就不用交换
+      ) {
+        const temp = nums[nums[i] - 1]; // 交换
+        nums[nums[i] - 1] = nums[i];
+        nums[i] = temp;
+      }
+    }
+    // 现在期待的是 [1,2,3,...]，如果遍历到不是放着该放的元素
+    for (let i = 0; i < nums.length; i++) {
+      if (nums[i] != i + 1) {
+        return i + 1;
+      }
+    }
+    return nums.length + 1; // 发现元素 1~nums.length 占满了数组，一个没缺
+  }
+
+```
