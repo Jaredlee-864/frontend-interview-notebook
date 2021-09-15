@@ -541,3 +541,95 @@ function firstMissingPositive(nums) {
   }
 
 ```
+
+### 手写-怎么在指定数据源里面生成一个长度为 n 的不重复随机数组 能有几种方法 时间复杂度多少（字节）
+
+```js
+
+// 时间复杂度为 O(n^2)
+function getRandomArr(testArr, n) {
+  const result = [];
+  let i = n;
+  while (i > 0) {
+    const ran = Math.floor(Math.random() * testArr.length);
+    const cur = testArr[ran];
+    if (!result.includes(cur)) {
+      result.push(cur);
+      i--;
+    }
+  }
+  return result;
+}
+
+// 时间复杂度为 O(n)
+function getRandomArr1(testArr, n) {
+  let result = new Set();
+  while (result.size < n) {
+    const ran = Math.floor(Math.random() * testArr.length);
+    const cur = testArr[ran];
+    result.add(cur);
+  }
+  return Array.from(result);
+}
+
+// 标记法/自定义属性法 时间复杂度为 O(n)
+function getRandomArr2(testArr, n) {
+  const hash = {};
+  const result = [];
+  let i = n;
+  while (i > 0) {
+    const ran = Math.floor(Math.random() * testArr.length);
+    if (!hash[ran]) {
+      hash[ran] = true;
+      result.push(testArr[ran]);
+      i--;
+    }
+  }
+  return result;
+}
+
+// 最终版 边遍历边删除 时间复杂度为 O(n)
+function getRandomArr3(testArr, n) {
+  const cloneArr = [...testArr];
+  const result = [];
+  for (let i = 0; i < n; i++) {
+    const ran = Math.floor(Math.random() * cloneArr.length);
+    result.push(cloneArr[ran]);
+    cloneArr.splice(ran, 1);
+  }
+  return result;
+}
+
+// 交换法 时间复杂度为 O(n)
+function getRandomArr4(testArr, n) {
+  const cloneArr = [...testArr];
+  const result = [];
+  for (let i = 0; i < n; i++) {
+    const ran = Math.floor(Math.random() * (cloneArr.length - i));
+    result.push(cloneArr[ran]);
+    cloneArr[ran] = cloneArr[cloneArr.length - i - 1];
+  }
+  return result;
+}
+
+```
+
+### 手写 Vue.extend() 的实现
+
+```js
+import { mergeOptions } from "../util/index";
+export default function initExtend(Vue) {
+  let cid = 0; // 组件的唯一标识
+  // 创建子类继承 Vue 父类，便于扩展属性
+  Vue.extend = function (extendOptions) {
+    const Sub = function VueComponent(options) {
+      this._init(options);
+    };
+    Sub.cid = cid++;
+    Sub.protoType = Object.create(this.protoType);
+    Sub.protoType.constructor = Sub;
+    Sub.options = mergeOptions(extendOptions, options);
+    return Sub;
+  };
+}
+```
