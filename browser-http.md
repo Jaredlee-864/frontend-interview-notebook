@@ -5,10 +5,10 @@
   4. 发送请求，分析url，设置请求报文（头，体）
   5. 服务器返回请求的数据
   6. 浏览器根据返回的数据
-     1. HTML parser --> DOM Tree。解析HTML结构，构建成 AST DOM树
+     1. HTML parser --> DOM Tree。解析 HTML 结构，构建成 AST DOM 树
         - 标记化算法，进行元素状态的标记
         - dom 树构建
-     2. CSS parser --> Style Tree。解析CSS， 构建 AST STYLE 样式树
+     2. CSS parser --> Style Tree。解析 CSS， 构建 AST STYLE 样式树
         - 解析css代码，生成样式树
      3. attachment --> Render Tree。
         - 结合 dom 树 和 style 树，生成渲染树
@@ -170,7 +170,7 @@
   - 空间复制
   - 标记清除
   - 标记整理
-  - 标记增量
+  - 增量标记
 
 - 新生代（32M | 16M）（存活时间较短的对象）
   - 回收过程采用 复制算法 + 标记整理

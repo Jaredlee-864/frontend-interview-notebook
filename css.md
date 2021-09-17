@@ -15,9 +15,9 @@
 
 - 规则
   - 属于同一个 BFC 的两个相邻 Box 垂直排列
-  - 属于同一个 BFC 的两个响铃 Box 的 margin 会发生重叠
+  - 属于同一个 BFC 的两个相邻 Box 的 margin 会发生重叠
   - BFC 中子元素的 margin box 的左边，与包含块（BFC）border box的左边相接触（子元素absolute定位除外）
-  - BFC 的区域不会与float 的元素区域重叠
+  - BFC 的区域不会与 float 的元素区域重叠
   - 计算BFC的高度时，浮动子元素也参与计算
   - 文字层不会被浮动层覆盖，而是环绕于周围
 
@@ -77,10 +77,10 @@
 
 ## 7. link 于 @import 的区别
 
-- 本质上的区别：link 是 html 标签，具有很多属性，可以定义 Rel 等作用。而@import只能用于加载css
-- 加载顺序的区别：解析到 link 是，页面会同步加载所引入的css，而@import所引用的css会等到页面加载完才被加载
-- 兼容性方面的区别：@import需要IE5以上才能使用，而link因为是html标签，所以没有兼容性的问题
-- 动态引入方面的区别：link 可以使用js动态引入，@import 不行
+- 本质上的区别：link 是 html 标签，具有很多属性，可以定义 Rel 等作用。而 @import 是 css 用来引入外部样式表的语法，只能用于加载css
+- 加载顺序的区别：解析到 link 时，页面会同步加载所引入的css，而 @import 所引用的 css 会等到页面加载完才被加载
+- 兼容性方面的区别：@import 需要 IE5 以上才能使用，而 link 因为是 html 标签，所以没有兼容性的问题
+- 动态引入方面的区别：link 可以使用 js 动态引入，@import 不行
 
 ## 8. CSS 预处理器（Sass/Less/Postcss）\
 
