@@ -222,3 +222,66 @@ nextTick 异步实现方式，首先选用microTask, 如果浏览器不支持，
 - `actions`: 异步更新状态，使用 `dispatch` 触发一个 `action`
 - `getters`: 获取状态的处理过后的值
 - `modules`: 将`state`分成多个`modules`, 便于管理
+
+### Vue 3.0 与 Vue 2.0 的区别
+  1. 源码组织方式的变化
+      - 源码采用TypeScript 重写源码
+      - 使用 Monerepo 管理项目结构，即使用一个项目管理多个包，把不同功能的代码放到不同的包中管理，代码划分明确，每个功能模块都可以单独发布和使用。
+  2. Composition API
+      - 目的：为了解决使用vue在开发大型项目时，使用 option API 不好拆分重用的问题。
+      - 描述：
+        - Vue.js 3.0新增的一组API
+        - 一组基于函数的API
+        - 可以更灵活的组织组件的逻辑
+  3. 性能提升
+      - 响应式系统审计：使用proxy对象重写响应式代码
+        - 可以监听动态新增的属性
+        - 可以监听删除的属性
+        - 可以监听数组的索引和length属性
+      - 编译优化：对编译器进行优化，重写了虚拟DOM
+        - vue.js 3.0 中标记和提升所有的静态根节点，diff的时候只需要对比动态节点的内容
+          - Fragments (升级 vetur 插件)
+            - 不需要必须有根节点，如果没有根节点，内部会自动包裹一个 Fragments 节点
+          - 静态节点提升
+            - 将静态节点使用变量存储起来，diff时不再比较静态节点
+          - Patch Flag
+            - 根据 Patch Flag 类型的不同，标记 patch 函数执行时需要比较的具体的内容，比如 TEXT/PROPS。做到更精细准确的（细粒度更高）diff，提升比较的效率
+          - 缓存事件处理函数
+            - 将事件处理函数包裹成一个新的函数缓存起来。此处缓存的是handler的地址，即使handler重新赋值，也能访问到最新的
+            ```js
+             _createElementVNode("button", {
+                onClick: _cache[0] || (_cache[0] = (...args) => (_ctx.handleClick && _ctx.handleClick(...args)))
+              }, " button ")
+            ```
+      - 源码体积的优化
+        - 按需引用（Tree-shaking）
+          - 内置很多API支持Tree-shaking 
+          - 打包时只打包引用的API和核心的模块，会过滤到没有用的API
+        - 移除了一些不常用的API
+          - inline-template/fliter 等
+  4. Vite
+      - 背景
+        - 现代浏览器都支持 ES Module (IE不支持)
+        - 通过`<script type="modules" src="..."></script>`加载模块
+        - 支持模块的 script 默认延迟加载
+          - 类似于 script 标签设置 defer
+          - 在文档解析完成后（DOM树生成），触发 DOMContentLoaded 事件前执行
+      - Vite vs Vue-CLI
+        - Vite 在开发模式下不需要打包可以直接运行
+        - Vue-CLI（Webpack） 开发模式下必须对项目才可以打包
+      - 特点
+        - 快速冷启动
+        - 按需编译
+        - 模块热更新
+        - 开箱即用，不需要其他配置
+        - Vite 在生产环境下使用 Rollup 打包（基于 ES Module 的方式打包）
+          - 不需要使用 Babel 将 import 转换成 require，以及一些相应的辅助函数。因此 打包的体积相比于 vue-cli 要更小
+      - 打包 or 不打包
+        - 使用 webpack 打包的两个原因
+          - 浏览器环境并不支持模块化（目前绝大部分浏览器已支持）
+          - 零散的模块文件会产生大量的 http 请求（http2.0 支持多路复用）
+      - 核心功能
+        - 开启静态web服务器（Koa）
+        - 编译单文件组件
+          - 拦截浏览器不识别的模块，并处理
+        - HMR
