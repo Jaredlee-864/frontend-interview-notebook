@@ -80,7 +80,7 @@
       process.stdout.write("---" + data + "\n")
     }
 
-    proces.stdin.pipe(process.stdout)
+    process.stdin.pipe(process.stdout)
 
     process.stdin.setEncoding("utf-8")
     process.stdin.on("readable", () => {
@@ -203,8 +203,8 @@
     // 第三个和第四个表示从 b2 的那个位置开始读和到哪个位置结束
     ```
   4. Buffer 静态方法
-    - concat: 将多个buffer拼接成一个新的 buffer
-    - isBuffer: 判断当前数据是否为 buffer
+     - concat: 将多个buffer拼接成一个新的 buffer
+     - isBuffer: 判断当前数据是否为 buffer
   5. 自定义 Buffer 之 split
    ```js
    ArrayBuffer.prototype.split = function(seperator) {
@@ -233,7 +233,7 @@
         - r 可读
         - w 可写
         - s 同步
-        - + 执行相反操作
+        - \+ 执行相反操作
         - x 排他操作
         - a 追加操作
      3. 描述符
@@ -396,7 +396,7 @@
       for(let i = 1; i<= items.length; i++) {
         let dir = items.slice(0, i).join(path.sep)
         try {
-          fa.assessSync(dir)
+          fs.assessSync(dir)
         }catch(e) {
           fs.mkdirSync(dir)
         }
@@ -524,7 +524,7 @@
         - paths: 返回数组，存放不同目录下的node_modules位置
       - exports 属性
         - module.exports 与 exports 的区别
-          node中通过 module.exports 执行导出操作，而 exports 是 node 中为了方便书写，给每个提供的一个变量，指向 module.exports 的内存地址。因此可以使用 exports 直接导出内容。**但是不能给 exports 重新赋值，重新赋值 exports 就会和 module.exports 断开联系，无法再使用 exports 进行内容导出**
+          - node中通过 module.exports 执行导出操作，而 exports 是 node 中为了方便书写，给每个提供的一个变量，指向 module.exports 的内存地址。因此可以使用 exports 直接导出内容。**但是不能给 exports 重新赋值，重新赋值 exports 就会和 module.exports 断开联系，无法再使用 exports 进行内容导出**
         - require 属性
           - 基本功能是读入并且执行一个模块文件
           - resolve: 返回模块文件绝对路径
@@ -779,7 +779,7 @@
       - 执行同步代码，将不同的任务添加至相应的队列
       - 所有同步代码执行后会去执行满足条件的微任务
       - 所有微任务代码执行后会执行 timer 队列中满足的宏任务
-      - timer 中的所有宏任务执行完成后就会一次切换其他队列
+      - timer 中的所有宏任务执行完成后就会依次切换其他队列
       - 注意：在完成队列切换之前会先清空微任务代码
     <image src="./images/nodejs事件循环.png">
     - nodejs中 process.nextTick 为微任务，优先级高于 promise.then
@@ -814,7 +814,7 @@
     - 可读流
       - 消费数据
         - readable事件: 当流中存在可读取数据时触发
-        - data事件:当六中数据块传给消费者后触发
+        - data事件:当流中数据块传给消费者后触发
       ```js
       const { Readable } = require('stream')
 

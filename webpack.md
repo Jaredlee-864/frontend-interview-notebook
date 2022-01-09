@@ -19,7 +19,7 @@ webpack 构建流程从开始到结束会依次执行以下三个步骤：
 1. 初始化流程：从配置文件 和 shell 语句中读取并合并参数，同时初始化需要使用的插件，并配置插件等执行环境所需要的参数
    - 从配置文件 和 shell 中读取并合并配置，默认的配置文件为 webpack.config.js
    - 将合并好的配置拷贝到 options 对象中，并加载用户配置的 plugins
-   - 初始化 compiler 对象，complier 继承自 tapable，初始化时定义了很多狗子函数。该对象掌控着 webpack 的声明周期，不执行具体的任务，只是进行一些调度工作
+   - 初始化 compiler 对象，complier 继承自 tapable，初始化时定义了很多钩子函数。该对象掌控着 webpack 的声明周期，不执行具体的任务，只是进行一些调度工作
    - 初始化完成后，会调用 compiler 的 run 方法启动编译流程
 
 2. 编译构建流程：从 Entry 出发，找到对应的 module 并调用对应的 loader 去处理文件内容。如果 module 中有依赖的 module，会递归进行以上操作
